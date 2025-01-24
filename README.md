@@ -1,7 +1,6 @@
-# Red Arrow Detection using OpenCV
+# Red Arrow Detection and Inclination Measurement
 
-This project uses OpenCV and Python to detect arrow shapes in real-time through a webcam feed. The program processes video frames to identify contours resembling arrows and calculates the inclination of the detected arrow shapes.
-
+This project is a real-time computer vision application built using OpenCV in Python. It detects arrow-shaped objects in a video stream and calculates their inclination. The program leverages contour approximation and HSV color space masking to identify arrows and displays the detected arrows along with their inclination on the video feed.
 ## Features
 - Real-time detection of arrow shapes.
 - Highlights the detected arrow contours on the video feed.
