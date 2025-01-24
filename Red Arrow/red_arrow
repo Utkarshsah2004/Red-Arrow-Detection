@@ -1,0 +1,56 @@
+import cv2
+import numpy as np
+
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()  
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) 
+
+    lh, ls, lv = 0, 133, 255
+    uh, us, uv = 255, 255, 255
+    lb = np.array([lh, ls, lv]) 
+    ub = np.array([uh, us, uv]) 
+
+    mask = cv2.inRange(hsv, lb, ub) 
+    res = cv2.bitwise_and(frame, frame, mask=mask) 
+
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    for contour in contours:
+        epsilon = 0.03 * cv2.arcLength(contour, True)
+        approx = cv2.approxPolyDP(contour, epsilon, True)
+        area = cv2.contourArea(contour)  # Calculate contour area
+        
+        if area > 1:
+            if len(approx) == 7:
+                # Draw contours on the original frame
+                cv2.drawContours(frame, [approx], 0, (255, 0, 255), 2)
+                
+                # Calculate centroid of the approximated contour
+                M = cv2.moments(approx)
+                cx = int(M['m10'] / M['m00'])
+                cy = int(M['m01'] / M['m00'])
+                
+                # Display "Arrow Detected" text at the centroid
+                cv2.putText(frame, "Arrow Detected", (cx, cy), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+
+                largest_contour = max(contours, key=cv2.contourArea)
+                [vx, vy, x, y] = cv2.fitLine(largest_contour, cv2.DIST_L2, 0, 0.01, 0.01)
+
+
+                angle = np.arctan2(vy, vx) * 180 / np.pi
+                inclination = 90 - angle
+
+                print("Inclination", inclination)
+
+
+    cv2.imshow('Contours', frame)
+    cv2.imshow('MASK', mask)
+
+    key = cv2.waitKey(1)
+    if key == ord('q'):
+        break
+
+cv2.destroyAllWindows()
+cap.release()
