@@ -1,4 +1,4 @@
-# Arrow Detection using OpenCV
+# Red Arrow Detection using OpenCV
 
 This project uses OpenCV and Python to detect arrow shapes in real-time through a webcam feed. The program processes video frames to identify contours resembling arrows and calculates the inclination of the detected arrow shapes.
 
